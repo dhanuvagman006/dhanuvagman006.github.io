@@ -1,79 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dhanush A - Portfolio</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        header {
-            text-align: center;
-            padding: 50px;
-            background: #0073e6;
-            color: white;
-        }
-        section {
-            padding: 40px;
-            text-align: center;
-        }
-        .skills, .experience, .projects, .certifications {
-            background: #fff;
-            margin: 20px auto;
-            padding: 20px;
-            width: 80%;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #333;
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dhanush A | 3D Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      font-family: 'Roboto Mono', monospace;
+      background-color: #0e0e10;
+      color: #e0e0e0;
+    }
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: #e0e0e0;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #1e90ff;
+    }
+    #overlay {
+      position: absolute;
+      top: 20vh;
+      left: 40px;
+      padding: 40px;
+      z-index: 10;
+      max-width: 600px;
+    }
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      color: #1e90ff;
+      margin-bottom: 20px;
+    }
+    section {
+      position: relative;
+      width: 100%;
+      background: transparent;
+      padding: 80px 40px;
+      z-index: 5;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+    }
+    .btn-neon {
+      background: transparent;
+      border: 2px solid #1e90ff;
+      color: #1e90ff;
+      padding: 10px 25px;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-neon:hover {
+      background: #1e90ff;
+      color: #0e0e10;
+      box-shadow: 0 0 20px #1e90ff;
+    }
+    #three-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 0;
+      opacity: 0.8;
+    }
+    header {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1e3a8a, #00f7ff);
+    }
+  </style>
 </head>
 <body>
+  <!-- Particle Background -->
+  <div id="particles-js"></div>
 
-    <header>
-        <h1>Hello, I'm Dhanush A!</h1>
-        <p>Software Developer | Cloud Enthusiast | Tech Innovator</p>
-    </header>
+  <!-- Header with 3D Object -->
+  <header>
+    <canvas id="three-canvas"></canvas>
+    <div id="overlay">
+      <h1 class="text-4xl md:text-6xl font-bold font-orbitron mb-4">Dhanush A</h1>
+      <p class="text-lg md:text-xl mb-6">Engineer | Developer | Instructor<br>Passionate about Python, Web Design, GCP & Salesforce. Building scalable cloud apps and solving real-world problems.</p>
+      <button class="btn-neon" onclick="window.open('mailto:dhanuvagman69@gmail.com')">Contact Me</button>
+    </div>
+  </header>
 
-    <section class="about">
-        <h2>About Me</h2>
-        <p>Passionate about leveraging Python, React, C++, and SQL to build scalable solutions. Experienced in Salesforce, GCP, and cloud technologies.</p>
-    </section>
+  <!-- Navigation -->
+  <nav>
+    <div class="text-2xl font-bold font-orbitron">Dhanush A</div>
+    <div>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#certifications" class="nav-link">Certifications</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+  </nav>
 
-    <section class="skills">
-        <h2>Skills</h2>
-        <p>Python | React | C++ | SQL | Salesforce | GCP | Kubernetes</p>
-    </section>
+  <!-- About Section -->
+  <section id="about" class="about">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="section-title text-center">About Me</h2>
+      <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+        <p class="text-gray-300 leading-relaxed">I am passionate about leveraging my skills in <strong>Python, Web Design, C++, and SQL</strong> to drive innovation. Experienced in <strong>Salesforce</strong> and <strong>Google Cloud</strong>, I build scalable and efficient applications. I enjoy solving DSA problems and exploring analytics in trading.</p>
+      </div>
+    </div>
+  </section>
 
-    <section class="experience">
-        <h2>Experience</h2>
-        <p><strong>Team Lead - Nexus SIT</strong> | Oct 2024 - Present</p>
-        <p><strong>Course Instructor - Thaniya Technologies</strong> | May 2023 - Present</p>
-        <p><strong>Frontend Developer - Swizosoft</strong> | Oct 2023 - July 2024</p>
-    </section>
+  <!-- Skills Section -->
+  <section id="skills" class="skills">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="section-title text-center">Skills</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="glass-card text-center" data-tilt data-tilt-max="10" data-tilt-speed="400">Python</div>
+        <div class="glass-card text-center" data-tilt data-tilt-max="10" data-tilt-speed="400">React</div>
+        <div class="glass-card text-center" data-tilt data-tilt-max="10" data-tilt-speed="400">C++</div>
+        <div class="glass-card text-center" data-tilt data-tilt-max="10" data-tilt-speed="400">SQL</div>
+        <div class="glass-card text-center" data-tilt data-tilt-max="10" data-tilt-speed="400">Salesforce</div>
+        <div class="glass-card text-center" data-tilt data-tilt-max="10" data-tilt-speed="400">GCP</div>
+        <div class="glass-card text-center" data-tilt data-tilt-max="10" data-tilt-speed="400">Kubernetes</div>
+      </div>
+    </div>
+  </section>
 
-    <section class="projects">
-        <h2>Projects</h2>
-        <p>Portfolio Website | Cloud-Based App | Landing Page for Swizosoft</p>
-    </section>
+  <!-- Experience Section -->
+  <section id="experience" class="experience">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="section-title text-center">Experience</h2>
+      <div class="space-y-6">
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Team Lead - Nexus SIT</h3>
+          <p class="text-gray-400">Oct 2024 - Present</p>
+          <p class="text-gray-300 mt-2">Leading a team to deliver innovative software solutions, focusing on scalability and performance.</p>
+        </div>
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Course Instructor - Thaniya Technologies</h3>
+          <p class="text-gray-400">May 2023 - Present</p>
+          <p class="text-gray-300 mt-2">Teaching advanced programming concepts and cloud technologies to aspiring developers.</p>
+        </div>
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Frontend Developer - Swizosoft</h3>
+          <p class="text-gray-400">Oct 2023 - July 2024</p>
+          <p class="text-gray-300 mt-2">Developed responsive and user-friendly web interfaces using React and modern frontend technologies.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <section class="certifications">
-        <h2>Certifications</h2>
-        <p>Google Cloud Computing Foundations | Kubernetes Skill Badge | Deep Learning</p>
-    </section>
+  <!-- Projects Section -->
+  <section id="projects" class="projects">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="section-title text-center">Projects</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Swizosoft Landing Page</h3>
+          <p class="text-gray-300 mt-2">Designed and developed a responsive landing page for Swizosoft, a startup in Mangaluru.</p>
+        </div>
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Multimodal AI Assistant</h3>
+          <p class="text-gray-300 mt-2">Built an AI assistant combining voice and vision processing on a Jetson Nano Kit for accessibility support.</p>
+        </div>
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Private Blockchain for Clinical Trials</h3>
+          <p class="text-gray-300 mt-2">Designed a role-based private blockchain model integrating ML for anomaly detection in healthcare data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <footer>
-        <p>Contact me: <a href="mailto:dhanuvagman69@gmail.com">Email</a> | <a href="https://www.linkedin.com/in/dhanuvagman">LinkedIn</a></p>
-    </footer>
+  <!-- Certifications Section -->
+  <section id="certifications" class="certifications">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="section-title text-center">Certifications</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Google Cloud Computing Foundations</h3>
+          <p class="text-gray-300 mt-2">Mastered core concepts of cloud computing and GCP services.</p>
+        </div>
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Kubernetes Skill Badge</h3>
+          <p class="text-gray-300 mt-2">Demonstrated proficiency in container orchestration with Kubernetes.</p>
+        </div>
+        <div class="glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
+          <h3 class="text-xl font-semibold">Deep Learning</h3>
+          <p class="text-gray-300 mt-2">Acquired expertise in neural networks and deep learning frameworks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="section-title text-center">Contact</h2>
+      <div class="glass-card text-center">
+        <p class="text-gray-300">Email: <a href="mailto:dhanuvagman69@gmail.com" class="text-[#1e90ff] hover:text-[#63b3ed]">dhanuvagman69@gmail.com</a></p>
+        <p class="text-gray-300">LinkedIn: <a href="https://www.linkedin.com/in/dhanuvagman" class="text-[#1e90ff] hover:text-[#63b3ed]" target="_blank">linkedin.com/in/dhanuvagman</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2025 Dhanush A. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Three.js 3D Torus Knot with Mouse Interaction
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+    const material = new THREE.MeshStandardMaterial({ color: 0x1e90ff, roughness: 0.4, metalness: 0.8 });
+    const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0x00f7ff, wireframe: true, transparent: true, opacity: 0.3 });
+    const torusKnot = new THREE.Mesh(geometry, material);
+    const wireframe = new THREE.Mesh(geometry, wireframeMaterial);
+    scene.add(torusKnot, wireframe);
+
+    const pointLight = new THREE.PointLight(0xffffff, 2, 100);
+    pointLight.position.set(20, 20, 20);
+    scene.add(pointLight);
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+    scene.add(ambientLight);
+
+    camera.position.z = 40;
+
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', (event) => {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      torusKnot.rotation.x += 0.01 + mouseY * 0.05;
+      torusKnot.rotation.y += 0.01 + mouseX * 0.05;
+      wireframe.rotation.x = torusKnot.rotation.x;
+      wireframe.rotation.y = torusKnot.rotation.y;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // GSAP Animations
+    gsap.from("#overlay h1", {
+      duration: 1.5,
+      y: 100,
+      opacity: 0,
+      ease: "power3.out"
+    });
+    gsap.from("#overlay p", {
+      duration: 1.5,
+      y: 50,
+      opacity: 0,
+      delay: 0.5,
+      ease: "power3.out"
+    });
+    gsap.from("#overlay button", {
+      duration: 1.5,
+      scale: 0,
+      delay: 1,
+      ease: "elastic.out(1, 0.5)"
+    });
+
+    gsap.utils.toArray(".glass-card").forEach(card => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out"
+      });
+    });
+
+    gsap.utils.toArray(".section-title").forEach(title => {
+      gsap.from(title, {
+        scrollTrigger: {
+          trigger: title,
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        },
+        opacity: 0,
+        scale: 0.8,
+        duration: 1,
+        ease: "power3.out"
+      });
+    });
+
+    // Initialize Vanilla Tilt
+    VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+      max: 10,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.2
+    });
+
+    // Particles.js
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#1e90ff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5, random: true },
+        size: { value: 3, random: true },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: "#1e90ff",
+          opacity: 0.4,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          direction: "none",
+          random: false,
+          straight: false,
+          out_mode: "out",
+          bounce: false
+        }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: true, mode: "push" },
+          resize: true
+        }
+      },
+      retina_detect: true
+    });
+
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
 </body>
 </html>
